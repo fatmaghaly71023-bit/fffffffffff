@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Search, User, Hash, Clock, AlertCircle, Calendar, BookOpen } from 'lucide-react';
+import { Search, User, Hash, Clock, AlertCircle, Calendar, BookOpen, UserCheck } from 'lucide-react';
 import { Student } from '../types';
+import { RegistrationSearch } from './RegistrationSearch';
 
 interface SearchSectionProps {
   students: Student[];
@@ -12,6 +13,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ students, onResult
   const [searchTerm, setSearchTerm] = useState('');
   const [searchType, setSearchType] = useState<'name' | 'id'>('name');
   const [contestStarted] = useState(false); // المسابقة لم تبدأ بعد
+  const [showRegistrationSearch, setShowRegistrationSearch] = useState(false);
 
   const handleSearch = () => {
     if (!contestStarted) {
@@ -42,7 +44,50 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ students, onResult
   };
 
   return (
-    <section className={`py-12 shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
+    <>
+      {/* Toggle Buttons */}
+      <section className={`py-8 transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
+        <div className="container mx-auto px-4">
+          <div className="flex justify-center gap-4 mb-4">
+            <button
+              onClick={() => setShowRegistrationSearch(false)}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                !showRegistrationSearch 
+                  ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg' 
+                  : isDarkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Search className="w-5 h-5" />
+                البحث في النتائج
+              </div>
+            </button>
+            
+            <button
+              onClick={() => setShowRegistrationSearch(true)}
+              className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+                showRegistrationSearch 
+                  ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-lg' 
+                  : isDarkMode
+                  ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <UserCheck className="w-5 h-5" />
+                البحث عن التسجيل
+              </div>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {showRegistrationSearch ? (
+        <RegistrationSearch isDarkMode={isDarkMode} />
+      ) : (
+        <section className={`py-12 shadow-lg transition-colors duration-300 ${isDarkMode ? 'bg-gray-800' : 'bg-white'}`}>
       <div className="container mx-auto px-4">
         <div className="max-w-2xl mx-auto">
           <h2 className={`text-3xl font-bold text-center mb-8 ${isDarkMode ? 'text-gray-100' : 'text-gray-800'}`}>
@@ -145,5 +190,7 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ students, onResult
         </div>
       </div>
     </section>
+      )}
+    </>
   );
 };
